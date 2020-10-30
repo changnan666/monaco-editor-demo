@@ -4,102 +4,31 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta name="viewport" content="width=device-width">
-
 	<title>Monaco Editor</title>
-	<link rel="stylesheet" href="./index.css">
-
 	<link data-name="vs/editor/editor.main" rel="stylesheet"
 		href="node_modules/monaco-editor/min/vs/editor/editor.main.css">
 </head>
 
 <body>
-	<section class="try">
-		<div class="container">
-			<div class="editor row">
-				<div class="span9">
-					<div class="editor-frame">
-						<div class="loading editor" style="display: none;">
-							<div class="progress progress-striped active">
-								<div class="bar"></div>
-							</div>
-						</div>
-						<div id="editor"></div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-	</section>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"
-		integrity="sha256-wS9gmOZBqsqWxgIVgA8Y9WcQOa7PgSIX+rPA0VL2rbQ=" crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.0/bootstrap.min.js"
-		integrity="sha256-u+l2mGjpmGK/mFgUncmMcFKdMijvV+J3odlDJZSNUu8=" crossorigin="anonymous"></script>
+	<div id="editor" style="width: 400px;height: 300px;margin:10px;border: 1px solid #ddd;"></div>
 
 	<script>var require = { paths: { 'vs': 'node_modules/monaco-editor/min/vs' } };</script>
 	<script src="node_modules/monaco-editor/min/vs/loader.js"></script>
 	<script src="node_modules/monaco-editor/min/vs/editor/editor.main.nls.js"></script>
 	<script src="node_modules/monaco-editor/min/vs/editor/editor.main.js"></script>
 	<script>
-		var editor = null;
+		let editor = null;
 
-		$(document).ready(function () {
-			require(['vs/editor/editor.main'], function () {
-				var MODES = (function () {
-					var modesIds = monaco.languages.getLanguages().map(function (lang) {
-						return lang.id;
-					});
-
-					modesIds.sort();
-
-					return modesIds.map(function (modeId) {
-						return {
-							modeId: modeId,
-						};
-					});
-				})();
-
-				var startModeIndex = 0;
-				for (var i = 0; i < MODES.length; i++) {
-					var o = document.createElement('option');
-					o.textContent = MODES[i].modeId;
-					if (MODES[i].modeId === 'yaml') {
-						startModeIndex = i;
-					}
-					$(".language-picker").append(o);
-				}
-				loadSample(MODES[startModeIndex]);
-				$(".language-picker").change(function () {
-					loadSample(MODES[this.selectedIndex]);
-				});
-			});
-
-			window.onresize = function () {
-				if (editor) {
-					editor.layout();
-				}
-			};
-		});
-
-		var preloaded = {};
-		(function () {
-			var elements = Array.prototype.slice.call(document.querySelectorAll('pre[data-preload]'), 0);
-
-			elements.forEach(function (el) {
-				var path = el.getAttribute('data-preload');
-				preloaded[path] = el.innerText || el.textContent;
-				el.parentNode.removeChild(el);
-			});
-		})();
-
-		function loadSample(mode) {
-			editor = monaco.editor.create(document.getElementById('editor'), {
-				model: null,
-			});
-
-			var oldModel = editor.getModel();
-			var newModel = monaco.editor.createModel('哈哈哈', mode.modeId);
-			editor.setModel(newModel);
+		window.onresize = function () {
+			if (editor) {
+				editor.layout();
+			}
 		}
+
+		editor = monaco.editor.create(document.getElementById('editor'));
+
+		const newModel = monaco.editor.createModel('123', 'yaml');
+		editor.setModel(newModel);
 	</script>
 
 </body>
